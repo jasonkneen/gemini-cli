@@ -65,6 +65,9 @@ describe('ApiAuthDialog', () => {
     expect(mockedUseTextBuffer).toHaveBeenCalledWith(
       expect.objectContaining({
         initialText: 'test-key',
+        viewport: expect.objectContaining({
+          height: 4,
+        }),
       }),
     );
   });

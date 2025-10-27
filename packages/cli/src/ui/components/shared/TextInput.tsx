@@ -29,7 +29,14 @@ export function TextInput({
   onCancel,
   focus = true,
 }: TextInputProps): React.JSX.Element {
-  const { text, handleInput, visualCursor, viewportVisualLines } = buffer;
+  const {
+    text,
+    handleInput,
+    visualCursor,
+    viewportVisualLines,
+    visualScrollRow,
+  } = buffer;
+  const [cursorVisualRowAbsolute, cursorVisualColAbsolute] = visualCursor;
 
   const handleKeyPress = useCallback(
     (key: Key) => {
@@ -52,33 +59,46 @@ export function TextInput({
 
   const showPlaceholder = text.length === 0 && placeholder;
 
-  // Since this is a single-line input, we only care about the first line.
-  const lineText = viewportVisualLines[0] || '';
-  const cursorCol = visualCursor[1];
-
-  let content;
   if (showPlaceholder) {
-    content = focus ? (
-      <Text>
-        {chalk.inverse(placeholder[0] || ' ')}
-        <Text color={theme.text.secondary}>{placeholder.slice(1)}</Text>
-      </Text>
-    ) : (
-      <Text color={theme.text.secondary}>{placeholder}</Text>
+    return (
+      <Box>
+        {focus ? (
+          <Text>
+            {chalk.inverse(placeholder[0] || ' ')}
+            <Text color={theme.text.secondary}>{placeholder.slice(1)}</Text>
+          </Text>
+        ) : (
+          <Text color={theme.text.secondary}>{placeholder}</Text>
+        )}
+      </Box>
     );
-  } else {
-    const maskedLine = lineText;
-    if (focus) {
-      const charAtCursor = cpSlice(maskedLine, cursorCol, cursorCol + 1) || ' ';
-      const lineWithCursor =
-        cpSlice(maskedLine, 0, cursorCol) +
-        chalk.inverse(charAtCursor) +
-        cpSlice(maskedLine, cursorCol + 1);
-      content = <Text>{lineWithCursor}</Text>;
-    } else {
-      content = <Text>{maskedLine}</Text>;
-    }
   }
 
-  return <Box>{content}</Box>;
+  return (
+    <Box flexDirection="column">
+      {viewportVisualLines.map((lineText, idx) => {
+        const currentVisualRow = visualScrollRow + idx;
+        const isCursorLine =
+          focus && currentVisualRow === cursorVisualRowAbsolute;
+
+        const lineDisplay = isCursorLine
+          ? cpSlice(lineText, 0, cursorVisualColAbsolute) +
+            chalk.inverse(
+              cpSlice(
+                lineText,
+                cursorVisualColAbsolute,
+                cursorVisualColAbsolute + 1,
+              ) || ' ',
+            ) +
+            cpSlice(lineText, cursorVisualColAbsolute + 1)
+          : lineText;
+
+        return (
+          <Box key={idx} height={1}>
+            <Text>{lineDisplay}</Text>
+          </Box>
+        );
+      })}
+    </Box>
+  );
 }

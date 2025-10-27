@@ -296,4 +296,16 @@ describe('TextInput', () => {
     );
     expect(lastFrame()).not.toContain('\u001b[7m'); // Inverse video chalk
   });
+
+  it('renders multiple lines when text wraps', () => {
+    mockBuffer.text = 'line1\nline2';
+    mockBuffer.viewportVisualLines = ['line1', 'line2'];
+
+    const { lastFrame } = render(
+      <TextInput buffer={mockBuffer} onSubmit={onSubmit} onCancel={onCancel} />,
+    );
+
+    expect(lastFrame()).toContain('line1');
+    expect(lastFrame()).toContain('line2');
+  });
 });
