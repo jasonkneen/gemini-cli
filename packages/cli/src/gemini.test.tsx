@@ -175,6 +175,16 @@ describe('gemini.tsx main function', () => {
         getMessageBus: () => ({
           subscribe: vi.fn(),
         }),
+        getToolRegistry: vi.fn(),
+        getModel: () => 'gemini-pro',
+        getEmbeddingModel: () => 'embedding-001',
+        getApprovalMode: () => 'default',
+        getCoreTools: () => [],
+        getTelemetryEnabled: () => false,
+        getTelemetryLogPromptsEnabled: () => false,
+        getFileFilteringRespectGitIgnore: () => true,
+        getOutputFormat: () => 'text',
+        getExtensions: () => [],
         getUsageStatisticsEnabled: () => false,
       } as unknown as Config;
     });
