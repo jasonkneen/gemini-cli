@@ -159,7 +159,6 @@ describe('gemini.tsx main function', () => {
       callOrder.push('loadCliConfig');
       return {
         isInteractive: () => false,
-        getContentGeneratorConfig: () => ({}),
         getQuestion: () => '',
         getSandbox: () => false,
         getDebugMode: () => false,
@@ -176,6 +175,7 @@ describe('gemini.tsx main function', () => {
           subscribe: vi.fn(),
         }),
         getToolRegistry: vi.fn(),
+        getContentGeneratorConfig: vi.fn(),
         getModel: () => 'gemini-pro',
         getEmbeddingModel: () => 'embedding-001',
         getApprovalMode: () => 'default',
