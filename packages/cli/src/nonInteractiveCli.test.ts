@@ -1263,7 +1263,7 @@ describe('runNonInteractive', () => {
     expect(processStdoutSpy).toHaveBeenCalledWith('Final Answer');
   });
 
-  it('should display a deprecation warning in JSON format', async () => {
+  it('should display a deprecation warning for JSON format', async () => {
     const events: ServerGeminiStreamEvent[] = [
       { type: GeminiEventType.Content, value: 'Final Answer' },
       {
@@ -1275,9 +1275,6 @@ describe('runNonInteractive', () => {
       createStreamFromEvents(events),
     );
     vi.mocked(mockConfig.getOutputFormat).mockReturnValue(OutputFormat.JSON);
-    vi.mocked(uiTelemetryService.getMetrics).mockReturnValue(
-      MOCK_SESSION_METRICS,
-    );
 
     await runNonInteractive({
       config: mockConfig,
@@ -1289,12 +1286,6 @@ describe('runNonInteractive', () => {
 
     const deprecateText =
       'Use the positional prompt instead. This flag will be removed in a future version.\n';
-    expect(processStdoutSpy).toHaveBeenCalledWith(
-      JSON.stringify(
-        { response: deprecateText, stats: MOCK_SESSION_METRICS },
-        null,
-        2,
-      ),
-    );
+    expect(processStdoutSpy).toHaveBeenCalledWith(deprecateText);
   });
 });
