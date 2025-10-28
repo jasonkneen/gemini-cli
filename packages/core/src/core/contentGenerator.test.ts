@@ -17,6 +17,7 @@ import type { Config } from '../config/config.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
 import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
+import { RecordingContentGenerator } from './recordingContentGenerator.js';
 
 vi.mock('../code_assist/codeAssist.js');
 vi.mock('@google/genai');
@@ -48,6 +49,22 @@ describe('createContentGenerator', () => {
       fakeResponsesFile,
     );
     expect(generator).toEqual(mockGenerator);
+  });
+
+  it('should create a RecordingContentGenerator', async () => {
+    const fakeResponsesFile = 'fake/responses.yaml';
+    const recordResponsesFile = 'record/responses.yaml';
+    const mockConfigWithRecordResponses = {
+      fakeResponses: fakeResponsesFile,
+      recordResponses: recordResponsesFile,
+    } as unknown as Config;
+    const generator = await createContentGenerator(
+      {
+        authType: AuthType.USE_GEMINI,
+      },
+      mockConfigWithRecordResponses,
+    );
+    expect(generator).toBeInstanceOf(RecordingContentGenerator);
   });
 
   it('should create a CodeAssistContentGenerator', async () => {
