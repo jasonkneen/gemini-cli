@@ -9,7 +9,7 @@ import type { LoadedSettings } from '../../config/settings.js';
 import {
   AuthType,
   type Config,
-  ApiKeyCredentialStorage,
+  loadApiKey,
   debugLogger,
 } from '@google/gemini-cli-core';
 import { getErrorMessage } from '@google/gemini-cli-core';
@@ -55,7 +55,7 @@ export const useAuthCommand = (settings: LoadedSettings, config: Config) => {
   );
 
   const reloadApiKey = useCallback(async () => {
-    const storedKey = (await ApiKeyCredentialStorage.loadApiKey()) ?? '';
+    const storedKey = (await loadApiKey()) ?? '';
     const envKey = process.env['GEMINI_API_KEY'] ?? '';
     const key = storedKey || envKey;
     setApiKeyDefaultValue(key);

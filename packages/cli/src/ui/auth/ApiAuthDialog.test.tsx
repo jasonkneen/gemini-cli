@@ -22,6 +22,12 @@ vi.mock('../components/shared/text-buffer.js', () => ({
   useTextBuffer: vi.fn(),
 }));
 
+vi.mock('../contexts/UIStateContext.js', () => ({
+  useUIState: vi.fn(() => ({
+    mainAreaWidth: 80,
+  })),
+}));
+
 const mockedUseKeypress = useKeypress as Mock;
 const mockedUseTextBuffer = useTextBuffer as Mock;
 

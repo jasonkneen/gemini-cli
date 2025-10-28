@@ -15,6 +15,7 @@ import type {
   TextBufferState,
   TextBufferAction,
   VisualLayout,
+  TextBufferOptions,
 } from './text-buffer.js';
 import {
   useTextBuffer,
@@ -99,6 +100,43 @@ describe('textBufferReducer', () => {
       expect(state.lines).toEqual(['', 'hello']);
       expect(state.cursorRow).toBe(1);
       expect(state.cursorCol).toBe(0);
+    });
+  });
+
+  describe('insert action with options', () => {
+    it('should filter input using inputFilter option', () => {
+      const action: TextBufferAction = { type: 'insert', payload: 'a1b2c3' };
+      const options: TextBufferOptions = {
+        inputFilter: (text) => text.replace(/[0-9]/g, ''),
+      };
+      const state = textBufferReducer(initialState, action, options);
+      expect(state.lines).toEqual(['abc']);
+      expect(state.cursorCol).toBe(3);
+    });
+
+    it('should strip newlines when singleLine option is true', () => {
+      const action: TextBufferAction = {
+        type: 'insert',
+        payload: 'hello\nworld',
+      };
+      const options: TextBufferOptions = { singleLine: true };
+      const state = textBufferReducer(initialState, action, options);
+      expect(state.lines).toEqual(['helloworld']);
+      expect(state.cursorCol).toBe(10);
+    });
+
+    it('should apply both inputFilter and singleLine options', () => {
+      const action: TextBufferAction = {
+        type: 'insert',
+        payload: 'h\ne\nl\nl\no\n1\n2\n3',
+      };
+      const options: TextBufferOptions = {
+        singleLine: true,
+        inputFilter: (text) => text.replace(/[0-9]/g, ''),
+      };
+      const state = textBufferReducer(initialState, action, options);
+      expect(state.lines).toEqual(['hello']);
+      expect(state.cursorCol).toBe(5);
     });
   });
 

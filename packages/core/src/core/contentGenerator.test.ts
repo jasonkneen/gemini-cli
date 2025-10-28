@@ -15,15 +15,13 @@ import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import { GoogleGenAI } from '@google/genai';
 import type { Config } from '../config/config.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
-import { ApiKeyCredentialStorage } from './apiKeyCredentialStorage.js';
+import { loadApiKey } from './apiKeyCredentialStorage.js';
 import { FakeContentGenerator } from './fakeContentGenerator.js';
 
 vi.mock('../code_assist/codeAssist.js');
 vi.mock('@google/genai');
-vi.mock('../core/apiKeyCredentialStorage.js', () => ({
-  ApiKeyCredentialStorage: {
-    loadApiKey: vi.fn(),
-  },
+vi.mock('./apiKeyCredentialStorage.js', () => ({
+  loadApiKey: vi.fn(),
 }));
 
 vi.mock('./fakeContentGenerator.js');
@@ -176,7 +174,7 @@ describe('createContentGeneratorConfig', () => {
 
   it('should not configure for Gemini if GEMINI_API_KEY is not set and storage is empty', async () => {
     vi.stubEnv('GEMINI_API_KEY', '');
-    vi.mocked(ApiKeyCredentialStorage.loadApiKey).mockResolvedValue(null);
+    vi.mocked(loadApiKey).mockResolvedValue(null);
     const config = await createContentGeneratorConfig(
       mockConfig,
       AuthType.USE_GEMINI,

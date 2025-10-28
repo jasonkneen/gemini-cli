@@ -15,7 +15,7 @@ import type {
 import { GoogleGenAI } from '@google/genai';
 import { createCodeAssistContentGenerator } from '../code_assist/codeAssist.js';
 import type { Config } from '../config/config.js';
-import { ApiKeyCredentialStorage } from './apiKeyCredentialStorage.js';
+import { loadApiKey } from './apiKeyCredentialStorage.js';
 
 import type { UserTierId } from '../code_assist/types.js';
 import { LoggingContentGenerator } from './loggingContentGenerator.js';
@@ -62,9 +62,7 @@ export async function createContentGeneratorConfig(
   authType: AuthType | undefined,
 ): Promise<ContentGeneratorConfig> {
   const geminiApiKey =
-    (await ApiKeyCredentialStorage.loadApiKey()) ||
-    process.env['GEMINI_API_KEY'] ||
-    undefined;
+    (await loadApiKey()) || process.env['GEMINI_API_KEY'] || undefined;
   const googleApiKey = process.env['GOOGLE_API_KEY'] || undefined;
   const googleCloudProject =
     process.env['GOOGLE_CLOUD_PROJECT'] ||

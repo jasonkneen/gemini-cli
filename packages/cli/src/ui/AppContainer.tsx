@@ -44,7 +44,7 @@ import {
   clearCachedCredentialFile,
   recordExitFail,
   ShellExecutionService,
-  ApiKeyCredentialStorage,
+  saveApiKey,
   debugLogger,
   coreEvents,
   CoreEvent,
@@ -433,7 +433,7 @@ Logging in with Google... Please restart Gemini CLI to continue.
           return;
         }
 
-        await ApiKeyCredentialStorage.saveApiKey(apiKey);
+        await saveApiKey(apiKey);
         await reloadApiKey();
         await config.refreshAuth(AuthType.USE_GEMINI);
         setAuthState(AuthState.Authenticated);
@@ -1075,26 +1075,6 @@ Logging in with Google... Please restart Gemini CLI to continue.
     ],
   );
 
-  const dialogsVisible =
-    shouldShowIdePrompt ||
-    isFolderTrustDialogOpen ||
-    !!shellConfirmationRequest ||
-    !!confirmationRequest ||
-    confirmUpdateExtensionRequests.length > 0 ||
-    !!loopDetectionConfirmationRequest ||
-    isThemeDialogOpen ||
-    isSettingsDialogOpen ||
-    isModelDialogOpen ||
-    isPermissionsDialogOpen ||
-    isAuthenticating ||
-    isAuthDialogOpen ||
-    isEditorDialogOpen ||
-    showPrivacyNotice ||
-    showIdeRestartPrompt ||
-    !!proQuotaRequest ||
-    isAuthDialogOpen ||
-    authState === AuthState.AwaitingApiKeyInput;
-
   useKeypress(handleGlobalKeypress, { isActive: true });
 
   // Update terminal title with Gemini CLI status and thoughts
@@ -1197,6 +1177,26 @@ Logging in with Google... Please restart Gemini CLI to continue.
   );
 
   const nightly = props.version.includes('nightly');
+
+  const dialogsVisible =
+    shouldShowIdePrompt ||
+    isFolderTrustDialogOpen ||
+    !!shellConfirmationRequest ||
+    !!confirmationRequest ||
+    confirmUpdateExtensionRequests.length > 0 ||
+    !!loopDetectionConfirmationRequest ||
+    isThemeDialogOpen ||
+    isSettingsDialogOpen ||
+    isModelDialogOpen ||
+    isPermissionsDialogOpen ||
+    isAuthenticating ||
+    isAuthDialogOpen ||
+    isEditorDialogOpen ||
+    showPrivacyNotice ||
+    showIdeRestartPrompt ||
+    !!proQuotaRequest ||
+    isAuthDialogOpen ||
+    authState === AuthState.AwaitingApiKeyInput;
 
   const pendingHistoryItems = useMemo(
     () => [...pendingSlashCommandHistoryItems, ...pendingGeminiHistoryItems],
