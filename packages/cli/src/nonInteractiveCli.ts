@@ -171,10 +171,6 @@ export async function runNonInteractive({
             content: deprecateText,
             delta: true,
           });
-        } else if (config.getOutputFormat() === OutputFormat.JSON) {
-          const formatter = new JsonFormatter();
-          const stats = uiTelemetryService.getMetrics();
-          process.stdout.write(formatter.format(deprecateText, stats));
         } else {
           process.stdout.write(deprecateText);
         }
