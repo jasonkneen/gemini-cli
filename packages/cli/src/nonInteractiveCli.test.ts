@@ -363,12 +363,12 @@ describe('runNonInteractive', () => {
       .mockReturnValueOnce(createStreamFromEvents(modelTurn3));
 
     // 4. Run the command.
-    await runNonInteractive(
-      mockConfig,
-      mockSettings,
-      'Use mock tool multiple times',
-      'prompt-id-multi',
-    );
+    await runNonInteractive({
+      config: mockConfig,
+      settings: mockSettings,
+      input: 'Use mock tool multiple times',
+      prompt_id: 'prompt-id-multi',
+    });
 
     // 5. Verify the output.
     // The rendered output should contain the text from each turn, separated by a
@@ -1118,12 +1118,12 @@ describe('runNonInteractive', () => {
         createStreamFromEvents(events),
       );
 
-      await runNonInteractive(
-        mockConfig,
-        mockSettings,
-        'test',
-        'prompt-id-events',
-      );
+      await runNonInteractive({
+        config: mockConfig,
+        settings: mockSettings,
+        input: 'test',
+        prompt_id: 'prompt-id-events',
+      });
 
       expect(mockCoreEvents.on).toHaveBeenCalledWith(
         CoreEvent.UserFeedback,
@@ -1143,12 +1143,12 @@ describe('runNonInteractive', () => {
         createStreamFromEvents(events),
       );
 
-      await runNonInteractive(
-        mockConfig,
-        mockSettings,
-        'test',
-        'prompt-id-events',
-      );
+      await runNonInteractive({
+        config: mockConfig,
+        settings: mockSettings,
+        input: 'test',
+        prompt_id: 'prompt-id-events',
+      });
 
       expect(mockCoreEvents.off).toHaveBeenCalledWith(
         CoreEvent.UserFeedback,
@@ -1167,12 +1167,12 @@ describe('runNonInteractive', () => {
         createStreamFromEvents(events),
       );
 
-      await runNonInteractive(
-        mockConfig,
-        mockSettings,
-        'test',
-        'prompt-id-events',
-      );
+      await runNonInteractive({
+        config: mockConfig,
+        settings: mockSettings,
+        input: 'test',
+        prompt_id: 'prompt-id-events',
+      });
 
       // Get the registered handler
       const handler = mockCoreEvents.on.mock.calls.find(
@@ -1204,12 +1204,12 @@ describe('runNonInteractive', () => {
         createStreamFromEvents(events),
       );
 
-      await runNonInteractive(
-        mockConfig,
-        mockSettings,
-        'test',
-        'prompt-id-events',
-      );
+      await runNonInteractive({
+        config: mockConfig,
+        settings: mockSettings,
+        input: 'test',
+        prompt_id: 'prompt-id-events',
+      });
 
       // Get the registered handler
       const handler = mockCoreEvents.on.mock.calls.find(
