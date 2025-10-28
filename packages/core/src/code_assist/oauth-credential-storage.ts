@@ -55,7 +55,7 @@ export class OAuthCredentialStorage {
         'Failed to load OAuth credentials',
         error,
       );
-      throw new Error('Failed to load OAuth credentials');
+      throw new Error('Failed to load OAuth credentials', { cause: error });
     }
   }
 
@@ -99,7 +99,7 @@ export class OAuthCredentialStorage {
         'Failed to clear OAuth credentials',
         error,
       );
-      throw new Error('Failed to clear OAuth credentials');
+      throw new Error('Failed to clear OAuth credentials', { cause: error });
     }
   }
 

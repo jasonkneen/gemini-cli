@@ -125,23 +125,27 @@ describe('OAuthCredentialStorage', () => {
     });
 
     it('should throw an error if loading fails', async () => {
+      const mockError = new Error('HybridTokenStorage error');
+      vi.spyOn(mockHybridTokenStorage, 'getCredentials').mockRejectedValue(
+        mockError,
+      );
+
       await expect(OAuthCredentialStorage.loadCredentials()).rejects.toThrow(
         'Failed to load OAuth credentials',
       );
       expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
         'Failed to load OAuth credentials',
-        expect.any(Error),
+        mockError,
       );
     });
 
     it('should throw an error if read file fails', async () => {
+      const mockError = new Error('Permission denied');
       vi.spyOn(mockHybridTokenStorage, 'getCredentials').mockResolvedValue(
         null,
       );
-      vi.spyOn(fs, 'readFile').mockRejectedValue(
-        new Error('Permission denied'),
-      );
+      vi.spyOn(fs, 'readFile').mockRejectedValue(mockError);
 
       await expect(OAuthCredentialStorage.loadCredentials()).rejects.toThrow(
         'Failed to load OAuth credentials',
@@ -149,7 +153,7 @@ describe('OAuthCredentialStorage', () => {
       expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
         'Failed to load OAuth credentials',
-        expect.any(Error),
+        mockError,
       );
     });
 
@@ -217,8 +221,9 @@ describe('OAuthCredentialStorage', () => {
     });
 
     it('should throw an error if clearing from HybridTokenStorage fails', async () => {
+      const mockError = new Error('Deletion error');
       vi.spyOn(mockHybridTokenStorage, 'deleteCredentials').mockRejectedValue(
-        new Error('Deletion error'),
+        mockError,
       );
 
       await expect(OAuthCredentialStorage.clearCredentials()).rejects.toThrow(
@@ -227,7 +232,7 @@ describe('OAuthCredentialStorage', () => {
       expect(coreEvents.emitFeedback).toHaveBeenCalledWith(
         'error',
         'Failed to clear OAuth credentials',
-        expect.any(Error),
+        mockError,
       );
     });
   });
