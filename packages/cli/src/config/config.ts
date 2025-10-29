@@ -6,7 +6,7 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { homedir } from 'node:os';
+import { getHomeDir } from '../utils/osUtils.js';
 import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import process from 'node:process';
@@ -311,7 +311,7 @@ export async function loadHierarchicalGeminiMemory(
 ): Promise<{ memoryContent: string; fileCount: number; filePaths: string[] }> {
   // FIX: Use real, canonical paths for a reliable comparison to handle symlinks.
   const realCwd = fs.realpathSync(path.resolve(currentWorkingDirectory));
-  const realHome = fs.realpathSync(path.resolve(homedir()));
+  const realHome = fs.realpathSync(path.resolve(getHomeDir()));
   const isHomeDirectory = realCwd === realHome;
 
   // If it is the home directory, pass an empty string to the core memory

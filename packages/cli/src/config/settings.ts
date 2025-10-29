@@ -6,7 +6,8 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import { homedir, platform } from 'node:os';
+import { platform } from 'node:os';
+import { getHomeDir } from '../utils/osUtils.js';
 import * as dotenv from 'dotenv';
 import process from 'node:process';
 import {
@@ -470,11 +471,11 @@ function findEnvFile(startDir: string): string | null {
     const parentDir = path.dirname(currentDir);
     if (parentDir === currentDir || !parentDir) {
       // check .env under home as fallback, again preferring gemini-specific .env
-      const homeGeminiEnvPath = path.join(homedir(), GEMINI_DIR, '.env');
+      const homeGeminiEnvPath = path.join(getHomeDir(), GEMINI_DIR, '.env');
       if (fs.existsSync(homeGeminiEnvPath)) {
         return homeGeminiEnvPath;
       }
-      const homeEnvPath = path.join(homedir(), '.env');
+      const homeEnvPath = path.join(getHomeDir(), '.env');
       if (fs.existsSync(homeEnvPath)) {
         return homeEnvPath;
       }
@@ -566,7 +567,7 @@ export function loadSettings(
 
   // Resolve paths to their canonical representation to handle symlinks
   const resolvedWorkspaceDir = path.resolve(workspaceDir);
-  const resolvedHomeDir = path.resolve(homedir());
+  const resolvedHomeDir = path.resolve(getHomeDir());
 
   let realWorkspaceDir = resolvedWorkspaceDir;
   try {

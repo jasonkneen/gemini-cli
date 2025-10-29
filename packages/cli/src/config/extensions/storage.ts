@@ -6,7 +6,8 @@
 
 import * as path from 'node:path';
 import * as fs from 'node:fs';
-import * as os from 'node:os';
+import { tmpdir } from 'node:os';
+import { getHomeDir } from '../../utils/osUtils.js';
 import {
   EXTENSION_SETTINGS_FILENAME,
   EXTENSIONS_CONFIG_FILENAME,
@@ -36,12 +37,10 @@ export class ExtensionStorage {
   }
 
   static getUserExtensionsDir(): string {
-    return new Storage(os.homedir()).getExtensionsDir();
+    return new Storage(getHomeDir()).getExtensionsDir();
   }
 
   static async createTmpDir(): Promise<string> {
-    return await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), 'gemini-extension'),
-    );
+    return await fs.promises.mkdtemp(path.join(tmpdir(), 'gemini-extension'));
   }
 }

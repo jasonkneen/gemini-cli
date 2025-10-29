@@ -46,19 +46,37 @@ export async function relaunchAppInChildProcess(
     ];
     const newEnv = { ...process.env, GEMINI_CLI_NO_RELAUNCH: 'true' };
 
+    const isWindows = process.platform === 'win32';
+
     // The parent process should not be reading from stdin while the child is running.
-    process.stdin.pause();
+    if (!isWindows) {
+      process.stdin.pause();
+    }
 
     const child = spawn(process.execPath, nodeArgs, {
-      stdio: 'inherit',
+      stdio: isWindows ? 'pipe' : 'inherit',
       env: newEnv,
     });
+
+    if (isWindows && child.stdin && child.stdout && child.stderr) {
+      process.stdin.pipe(child.stdin);
+      child.stdout.pipe(process.stdout);
+      child.stderr.pipe(process.stderr);
+
+      child.on('close', () => {
+        if (child.stdin) {
+          process.stdin.unpipe(child.stdin);
+        }
+      });
+    }
 
     return new Promise<number>((resolve, reject) => {
       child.on('error', reject);
       child.on('close', (code) => {
         // Resume stdin before the parent process exits.
-        process.stdin.resume();
+        if (!isWindows) {
+          process.stdin.resume();
+        }
         resolve(code ?? 1);
       });
     });
