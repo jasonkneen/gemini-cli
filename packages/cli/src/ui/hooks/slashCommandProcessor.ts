@@ -38,6 +38,7 @@ import { CommandService } from '../../services/CommandService.js';
 import { BuiltinCommandLoader } from '../../services/BuiltinCommandLoader.js';
 import { FileCommandLoader } from '../../services/FileCommandLoader.js';
 import { McpPromptLoader } from '../../services/McpPromptLoader.js';
+import { AgentSkillsLoader } from '../../services/AgentSkillsLoader.js';
 import { parseSlashCommand } from '../../utils/commands.js';
 import {
   type ExtensionUpdateAction,
@@ -299,6 +300,7 @@ export const useSlashCommandProcessor = (
           new McpPromptLoader(config),
           new BuiltinCommandLoader(config),
           new FileCommandLoader(config),
+          new AgentSkillsLoader(config),
         ],
         controller.signal,
       );

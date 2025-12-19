@@ -62,6 +62,9 @@ const external = [
   '@lydell/node-pty-linux-x64',
   '@lydell/node-pty-win32-arm64',
   '@lydell/node-pty-win32-x64',
+  // MCP SDK validation modules - resolved at runtime
+  '@modelcontextprotocol/sdk/validation/ajv',
+  '@modelcontextprotocol/sdk/validation/types.js',
 ];
 
 const baseConfig = {
